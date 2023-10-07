@@ -1,10 +1,13 @@
-﻿namespace RateEverything.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RateEverything.Models
 {
     public class Item
     {
         /// <summary>
         /// ID of the item
         /// </summary>
+        [Key]
         public int Id { get; set; }
 
         /// <summary>
