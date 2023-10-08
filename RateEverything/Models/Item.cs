@@ -26,14 +26,16 @@ namespace RateEverything.Models
         public int Rating { get; set; }
 
         /// <summary>
-        /// Dictionary of string and int, UserID to Rating Number
+        /// String to be seperated, inserted as "ID:#,ID:#"
+        /// Split using , then split again using :, this returns the id and the rating
+        /// provided
         /// </summary>
-        public Dictionary<int, int> UserRating { get; set; }
+        public string UserRating { get; set; }
 
         /// <summary>
-        /// Match ID to comment in order to prevent multiple people with same name
-        /// without unique identifers
+        /// String to be seperated, inserted as "ID:String Comment,ID:String Comment" seperated
+        /// using split using , then split again using :
         /// </summary>
-        public Dictionary<int, string> Comments { get; set; }
+        public string Comments { get; set; }
     }
 }

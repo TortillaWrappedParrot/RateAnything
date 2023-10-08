@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "t+mF4ot+ufz/icXNlKwH/qFcS0q33UJ1ED5DEL3UakYrjC4XfBEgDLgy0+KHdEE6Ridz7tJmDd+N6J+k70njKQ==",
+  "dgSpecHash": "VavEklNIa0ryAsJoEch/sxhbt3D/klgATH9pBKyev2cHVL4XhKRiT3UmxVeHfySWQT0NA/ItdeW+3LuvfJ1BEg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Wyatt\\Source\\Repos\\TortillaWrappedParrot\\RateAnything\\RateEverything\\RateEverything.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Wyatt\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Wyatt\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\Wyatt\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Wyatt\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\6.0.22\\microsoft.aspnetcore.diagnostics.entityframeworkcore.6.0.22.nupkg.sha512",
     "C:\\Users\\Wyatt\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Wyatt\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Wyatt\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.1\\microsoft.data.sqlclient.5.1.1.nupkg.sha512",
