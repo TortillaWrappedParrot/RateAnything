@@ -13,6 +13,8 @@ namespace RateEverything.Data
 
         public DbSet<Item> Items { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<ItemRating> ItemRatings { get; set; }
+
+        public DbSet<ItemComment> ItemComments { get; set; }
     }
 }

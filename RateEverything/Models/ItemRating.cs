@@ -1,24 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RateEverything.Models
 {
-    public class Item
+    public class ItemRating
     {
+        /// <summary>
+        /// Internal key of comment ID
+        /// </summary>
+        [Key]
+        public int InternalId { get; set; }
         /// <summary>
         /// ID of the item
         /// </summary>
-        [Key]
-        public int ItemId { get; set; }
+        [ForeignKey("ItemId")]
+        public int ItemIdRating { get; set; }
 
         /// <summary>
-        /// Name of the item
+        /// ID of the user posting the rating
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Description for the item
-        /// </summary>
-        public string Description { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Current rating from 1-5, displaye as stars
