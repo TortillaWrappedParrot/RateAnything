@@ -12,87 +12,87 @@ using RateEverything.Models;
 namespace RateEverything.Controllers
 {
     [Authorize]
-    public class ItemsController : Controller
+    public class ItemCommentsController : Controller
     {
         private readonly RateEverythingContext _context;
 
-        public ItemsController(RateEverythingContext context)
+        public ItemCommentsController(RateEverythingContext context)
         {
             _context = context;
         }
 
-        // GET: Items
+        // GET: ItemComments
         public async Task<IActionResult> Index()
         {
-              return _context.Items != null ? 
-                          View(await _context.Items.ToListAsync()) :
-                          Problem("Entity set 'RateEverythingContext.Items'  is null.");
+              return _context.ItemComments != null ? 
+                          View(await _context.ItemComments.ToListAsync()) :
+                          Problem("Entity set 'RateEverythingContext.ItemComments'  is null.");
         }
 
-        // GET: Items/Details/5
+        // GET: ItemComments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.ItemComments == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .FirstOrDefaultAsync(m => m.ItemId == id);
-            if (item == null)
+            var itemComment = await _context.ItemComments
+                .FirstOrDefaultAsync(m => m.InternalId == id);
+            if (itemComment == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(itemComment);
         }
 
-        // GET: Items/Create
+        // GET: ItemComments/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Items/Create
+        // POST: ItemComments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,Name,Description,Rating")] Item item)
+        public async Task<IActionResult> Create([Bind("InternalId,ItemIdComment,UserId,Comment")] ItemComment itemComment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(item);
+                _context.Add(itemComment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(item);
+            return View(itemComment);
         }
 
-        // GET: Items/Edit/5
+        // GET: ItemComments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.ItemComments == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            var itemComment = await _context.ItemComments.FindAsync(id);
+            if (itemComment == null)
             {
                 return NotFound();
             }
-            return View(item);
+            return View(itemComment);
         }
 
-        // POST: Items/Edit/5
+        // POST: ItemComments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemId,Name,Description,Rating")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("InternalId,ItemIdComment,UserId,Comment")] ItemComment itemComment)
         {
-            if (id != item.ItemId)
+            if (id != itemComment.InternalId)
             {
                 return NotFound();
             }
@@ -101,12 +101,12 @@ namespace RateEverything.Controllers
             {
                 try
                 {
-                    _context.Update(item);
+                    _context.Update(itemComment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(item.ItemId))
+                    if (!ItemCommentExists(itemComment.InternalId))
                     {
                         return NotFound();
                     }
@@ -117,49 +117,49 @@ namespace RateEverything.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(item);
+            return View(itemComment);
         }
 
-        // GET: Items/Delete/5
+        // GET: ItemComments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.ItemComments == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .FirstOrDefaultAsync(m => m.ItemId == id);
-            if (item == null)
+            var itemComment = await _context.ItemComments
+                .FirstOrDefaultAsync(m => m.InternalId == id);
+            if (itemComment == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(itemComment);
         }
 
-        // POST: Items/Delete/5
+        // POST: ItemComments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Items == null)
+            if (_context.ItemComments == null)
             {
-                return Problem("Entity set 'RateEverythingContext.Items'  is null.");
+                return Problem("Entity set 'RateEverythingContext.ItemComments'  is null.");
             }
-            var item = await _context.Items.FindAsync(id);
-            if (item != null)
+            var itemComment = await _context.ItemComments.FindAsync(id);
+            if (itemComment != null)
             {
-                _context.Items.Remove(item);
+                _context.ItemComments.Remove(itemComment);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ItemExists(int id)
+        private bool ItemCommentExists(int id)
         {
-          return (_context.Items?.Any(e => e.ItemId == id)).GetValueOrDefault();
+          return (_context.ItemComments?.Any(e => e.InternalId == id)).GetValueOrDefault();
         }
     }
 }
