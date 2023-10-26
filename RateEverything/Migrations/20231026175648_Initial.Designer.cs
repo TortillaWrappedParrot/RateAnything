@@ -12,7 +12,7 @@ using RateEverything.Data;
 namespace RateEverything.Migrations
 {
     [DbContext(typeof(RateEverythingContext))]
-    [Migration("20231010180824_Initial")]
+    [Migration("20231026175648_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -172,6 +172,13 @@ namespace RateEverything.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
