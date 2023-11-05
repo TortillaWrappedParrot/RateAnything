@@ -22,11 +22,20 @@ namespace RateEverything.Controllers
         }
 
         // GET: ItemComments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-              return _context.ItemComments != null ? 
-                          View(await _context.ItemComments.ToListAsync()) :
-                          Problem("Entity set 'RateEverythingContext.ItemComments'  is null.");
+
+            if (id != null)
+            {
+                return _context.ItemComments != null ?
+                      View(await _context.ItemComments.Where(x => x.ItemIdComment == id).ToListAsync()) :
+                      Problem("Entity set 'RateEverythingContext.ItemComments'  is null.");
+            } else
+            {
+                return _context.ItemComments != null ?
+                      View(await _context.ItemComments.ToListAsync()) :
+                      Problem("Entity set 'RateEverythingContext.ItemComments'  is null.");
+            }
         }
 
         // GET: ItemComments/Details/5
@@ -58,6 +67,7 @@ namespace RateEverything.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create([Bind("InternalId,ItemIdComment,UserId,Comment")] ItemComment itemComment)
         {
             if (ModelState.IsValid)
@@ -70,6 +80,7 @@ namespace RateEverything.Controllers
         }
 
         // GET: ItemComments/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.ItemComments == null)
@@ -90,6 +101,7 @@ namespace RateEverything.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int id, [Bind("InternalId,ItemIdComment,UserId,Comment")] ItemComment itemComment)
         {
             if (id != itemComment.InternalId)
@@ -121,6 +133,7 @@ namespace RateEverything.Controllers
         }
 
         // GET: ItemComments/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ItemComments == null)
@@ -141,6 +154,7 @@ namespace RateEverything.Controllers
         // POST: ItemComments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.ItemComments == null)
