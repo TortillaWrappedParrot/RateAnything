@@ -10,6 +10,7 @@ builder.Services.AddDbContext<RateEverythingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDefaultIdentity<RateEverythingUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<RateEverythingContext>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
