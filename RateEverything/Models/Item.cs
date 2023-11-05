@@ -23,6 +23,6 @@ namespace RateEverything.Models
         /// <summary>
         /// Current rating from 1-5, displaye as stars
         /// </summary>
-        public int Rating { get; set; }
+        public int Rating { get; set; } = 0;
     }
 }

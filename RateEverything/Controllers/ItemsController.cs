@@ -24,6 +24,12 @@ namespace RateEverything.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
+            foreach(var Item in await _context.Items.ToListAsync())
+            {
+                int RatingNumber = await _context.ItemComments.CountAsync(x => x.ItemIdComment == Item.ItemId);
+                Item.Rating = RatingNumber;
+            }
+
               return _context.Items != null ? 
                           View(await _context.Items.ToListAsync()) :
                           Problem("Entity set 'RateEverythingContext.Items'  is null.");
@@ -58,7 +64,7 @@ namespace RateEverything.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,Name,Description,Rating")] Item item)
+        public async Task<IActionResult> Create([Bind("ItemId,Name,Description")] Item item)
         {
             if (ModelState.IsValid)
             {
