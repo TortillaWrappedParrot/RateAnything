@@ -24,15 +24,31 @@ namespace RateEverything.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            foreach(var Item in await _context.Items.ToListAsync())
+            List<Item> ItemList = await _context.Items.ToListAsync();
+
+            foreach(var Item in ItemList)
             {
-                int RatingNumber = await _context.ItemComments.CountAsync(x => x.ItemIdComment == Item.ItemId);
-                Item.Rating = RatingNumber;
+                int Sum = 0;
+                int Amount = 1;
+
+                foreach(var Rating in await _context.ItemRatings.Where(x => x.Rating == Item.ItemId).ToListAsync())
+                {
+                    Sum += Rating.Rating;
+                    Amount += 1;
+                }
+
+                //No items found so default to 1 to prevent division error
+                if (Amount <= 0)
+                {
+                    Amount = 1;
+                }
+
+                Item.Rating = Sum / Amount;
             }
 
-              return _context.Items != null ? 
-                          View(await _context.Items.ToListAsync()) :
-                          Problem("Entity set 'RateEverythingContext.Items'  is null.");
+            return _context.Items != null ? 
+                        View(ItemList) :
+                        Problem("Entity set 'RateEverythingContext.Items'  is null.");
         }
 
         // GET: Items/Details/5
