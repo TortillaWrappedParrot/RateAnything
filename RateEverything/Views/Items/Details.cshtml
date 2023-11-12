@@ -1,4 +1,5 @@
-﻿@model RateEverything.Models.Item
+﻿@model RateEverything.Models.CombinedItem
+
 
 @{
     ViewData["Title"] = "Details";
@@ -12,27 +13,32 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.CurrentItem.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.CurrentItem.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.CurrentItem.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.CurrentItem.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
+            @Html.DisplayNameFor(model => model.CurrentItem.Rating)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
+            @Html.DisplayFor(model => model.CurrentItem.Rating)
         </dd>
     </dl>
 </div>
 <div>
+    <input type="button" onclick="ShowRatingPopup()" />
+    <div id="RatingPopup" style="display:none">
+        <p1>What would you rate this item from 1-5?</p1>
+        <a asp-action="Details">Submit Rating</a>
+    </div>
     <a class="nav-link text-dark" asp-area="" asp-controller="ItemComments" asp-action="Index">Comments</a>
-    <a asp-action="Edit" asp-route-id="@Model?.ItemId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.CurrentItem.ItemId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RateEverything.Areas.Identity.Data;
 using RateEverything.Data;
 using RateEverything.Models;
 
@@ -15,10 +19,12 @@ namespace RateEverything.Controllers
     public class ItemsController : Controller
     {
         private readonly RateEverythingContext _context;
+        private UserManager<RateEverythingUser> _userManager;
 
-        public ItemsController(RateEverythingContext context)
+        public ItemsController(RateEverythingContext context, UserManager<RateEverythingUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Items
@@ -66,8 +72,12 @@ namespace RateEverything.Controllers
                 return NotFound();
             }
 
-            return View(item);
+            List<ItemRating> ratings = await _context.ItemRatings.Where(x => x.ItemIdRating == item.ItemId).ToListAsync();
+
+            return View(new CombinedItem(item, ratings));
         }
+
+        
 
         // GET: Items/Create
         public IActionResult Create()
