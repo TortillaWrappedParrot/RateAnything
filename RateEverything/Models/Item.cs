@@ -24,5 +24,12 @@ namespace RateEverything.Models
         /// Current rating from 1-5, displaye as stars
         /// </summary>
         public int Rating { get; set; } = 0;
+
+        public Item(string name, string description, int rating)
+        {
+            this.Name = name;
+            this.Description = description;
+            this.Rating = rating;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RateEverything.Areas.Identity.Data;
 using RateEverything.Data;
 using RateEverything.Models;
@@ -30,14 +32,14 @@ namespace RateEverything.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            List<Item> ItemList = await _context.Items.ToListAsync();
+            List<Item> ItemList = _context.Items.ToList();
 
-            foreach(var Item in ItemList)
+            foreach(Item Item in ItemList)
             {
                 int Sum = 0;
                 int Amount = 1;
 
-                foreach(var Rating in await _context.ItemRatings.Where(x => x.Rating == Item.ItemId).ToListAsync())
+                foreach(ItemRating Rating in await _context.ItemRatings.Where(x => x.Rating == Item.ItemId).ToListAsync())
                 {
                     Sum += Rating.Rating;
                     Amount += 1;
@@ -73,11 +75,25 @@ namespace RateEverything.Controllers
             }
 
             List<ItemRating> ratings = await _context.ItemRatings.Where(x => x.ItemIdRating == item.ItemId).ToListAsync();
+            CombinedItem details = new(item, ratings);
 
-            return View(new CombinedItem(item, ratings));
+            return View(details);
         }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> Details(int? rating, int? ID)
+        {
+
+
+            if (rating != null && ID != null)
+            {
+                //ItemRating newRating = new(int.Parse(splitData[1]), User.FindFirstValue(ClaimTypes.NameIdentifier), int.Parse(splitData[0]));
+                //_context.Add(newRating);
+                //await _context.SaveChangesAsync();
+                return Json(true);
+            }
+            return View();
+        }
 
         // GET: Items/Create
         public IActionResult Create()

@@ -33,10 +33,13 @@
     </dl>
 </div>
 <div>
-    <input type="button" onclick="ShowRatingPopup()" />
+    <input type="button" onclick="showRatingPopup()" />
     <div id="RatingPopup" style="display:none">
-        <p1>What would you rate this item from 1-5?</p1>
-        <a asp-action="Details">Submit Rating</a>
+        <form id="ratingForm">
+            <label for="rating">Enter a rating from 1-5:</label><br>
+            <input type="text" id="rating" name="rating"><br>
+            <input type="submit" value="Submit" onclick="postRating('@Model.CurrentItem.ItemId')">
+        </form>
     </div>
     <a class="nav-link text-dark" asp-area="" asp-controller="ItemComments" asp-action="Index">Comments</a>
     <a asp-action="Edit" asp-route-id="@Model.CurrentItem.ItemId">Edit</a> |
