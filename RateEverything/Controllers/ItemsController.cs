@@ -32,30 +32,8 @@ namespace RateEverything.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            List<Item> ItemList = _context.Items.ToList();
-
-            foreach(Item Item in ItemList)
-            {
-                int Sum = 0;
-                int Amount = 1;
-
-                foreach(ItemRating Rating in await _context.ItemRatings.Where(x => x.Rating == Item.ItemId).ToListAsync())
-                {
-                    Sum += Rating.Rating;
-                    Amount += 1;
-                }
-
-                //No items found so default to 1 to prevent division error
-                if (Amount <= 0)
-                {
-                    Amount = 1;
-                }
-
-                Item.Rating = Sum / Amount;
-            }
-
             return _context.Items != null ? 
-                        View(ItemList) :
+                        View(await _context.Items.ToListAsync()) :
                         Problem("Entity set 'RateEverythingContext.Items'  is null.");
         }
 
@@ -81,18 +59,53 @@ namespace RateEverything.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(int? rating, int? ID)
+        public async Task<IActionResult> Details(int rating, int ID)
         {
+            string returnMessage = "No user!";
 
-
-            if (rating != null && ID != null)
+            if (User != null)
             {
-                //ItemRating newRating = new(int.Parse(splitData[1]), User.FindFirstValue(ClaimTypes.NameIdentifier), int.Parse(splitData[0]));
-                //_context.Add(newRating);
-                //await _context.SaveChangesAsync();
-                return Json(true);
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                returnMessage = "No data!";
+
+                if (!_context.ItemRatings.Where(x => x.UserId == userId).IsNullOrEmpty())
+                {
+                    ItemRating currentRating = _context.ItemRatings.Where(x => x.UserId == userId).First();
+
+                    currentRating.Rating = rating;
+                    _context.ItemRatings.Update(currentRating);
+                    returnMessage = "Created a new rating!";
+                } else
+                {
+                    ItemRating newRating = new(ID, User.FindFirstValue(ClaimTypes.NameIdentifier), rating);
+                    _context.ItemRatings.Add(newRating);
+                    returnMessage = "Updated previous rating!";
+                }
+
+                Item targetItem = _context.Items.First(x => x.ItemId == ID);
+
+                int Sum = 0;
+                int Amount = 1;
+
+                foreach (ItemRating Rating in await _context.ItemRatings.Where(x => x.ItemIdRating == targetItem.ItemId).ToListAsync())
+                {
+                    Sum += Rating.Rating;
+                    Amount += 1;
+                }
+
+                //No items found so default to 1 to prevent division error
+                if (Amount <= 0)
+                {
+                    Amount = 1;
+                }
+
+                targetItem.Rating = Sum / Amount;
+                _context.Items.Update(targetItem);
+
+                await _context.SaveChangesAsync();
+                return Json(returnMessage);
             }
-            return View();
+            return Json(returnMessage);
         }
 
         // GET: Items/Create

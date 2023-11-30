@@ -19,23 +19,23 @@ function postRating(itemID) {
     }
 
     //Debug
-    alert(postData);
-    console.log(postData);
+    //alert(postData);
+    //console.log(postData);
 
     $.ajax({
         url: '/Items/Details',
         type: "POST",
         data: postData,
         dataType: "json",
-        success: successFunc,
-        error: errorFunc
-    });
-
-    function successFunc(data, status) {
-        alert(data);
-    }
-
-    function errorFunc() {
-        alert('error');
-    }
+        success: function (data) {
+            alert(data);
+        },
+        failure: function (response) {
+            alert("sdfjsdjf2222");
+            console.log(response.responseText);
+        },
+        error: function (response) {
+            console.log(response.responseText);
+        }
+    })
 }
