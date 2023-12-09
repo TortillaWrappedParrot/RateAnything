@@ -58,28 +58,36 @@ namespace RateEverything.Controllers
             return View(details);
         }
 
+        /// <summary>
+        /// Given a rating and ID create a new rating or update the user's rating
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Details(int rating, int ID)
         {
-            string returnMessage = "No user!";
+            string returnMessage = "No user!"; //The return message sent back to the js
 
-            if (User != null)
+            if (User != null) //Check if there is a user logged in
             {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                returnMessage = "No data!";
+                returnMessage = "No data!"; //There's a user but no data made yet
 
-                if (!_context.ItemRatings.Where(x => x.UserId == userId).IsNullOrEmpty())
+                if (!_context.ItemRatings.Where(x => x.UserId == userId).IsNullOrEmpty()) //Check if the user already posted a review
                 {
+                    //If true then create a new rating
                     ItemRating currentRating = _context.ItemRatings.Where(x => x.UserId == userId).First();
 
                     currentRating.Rating = rating;
                     _context.ItemRatings.Update(currentRating);
-                    returnMessage = "Created a new rating!";
+                    returnMessage = "Created a new rating!"; //Change message to indicate created rating
                 } else
                 {
+                    //If false then update old rating
                     ItemRating newRating = new(ID, User.FindFirstValue(ClaimTypes.NameIdentifier), rating);
                     _context.ItemRatings.Add(newRating);
-                    returnMessage = "Updated previous rating!";
+                    returnMessage = "Updated previous rating!"; //Change message to indicate updated rating
                 }
 
                 Item targetItem = _context.Items.First(x => x.ItemId == ID);
@@ -87,7 +95,7 @@ namespace RateEverything.Controllers
                 int Sum = 0;
                 int Amount = 0;
 
-                foreach (ItemRating Rating in await _context.ItemRatings.Where(x => x.ItemIdRating == targetItem.ItemId).ToListAsync())
+                foreach (ItemRating Rating in await _context.ItemRatings.Where(x => x.ItemIdRating == targetItem.ItemId).ToListAsync()) //Update rating for item
                 {
                     Sum += Rating.Rating;
                     Amount += 1;
@@ -102,7 +110,7 @@ namespace RateEverything.Controllers
                 targetItem.Rating = Sum / Amount;
                 _context.Items.Update(targetItem);
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); //Save any changes
                 return Json(returnMessage);
             }
             return Json(returnMessage);
