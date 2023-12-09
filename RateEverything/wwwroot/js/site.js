@@ -26,16 +26,10 @@ function postRating(itemID) {
         url: '/Items/Details',
         type: "POST",
         data: postData,
-        dataType: "json",
-        success: function (data) {
-            alert(data);
-        },
-        failure: function (response) {
-            alert("sdfjsdjf2222");
-            console.log(response.responseText);
-        },
-        error: function (response) {
-            console.log(response.responseText);
-        }
+        dataType: "json"
+    }).fail(function (data) {
+        console.log("Ajax request failed, returned data: " + data);
+    }).done(function (data) {
+        console.log("Ajax request success, returned data: " + data);
     })
 }
