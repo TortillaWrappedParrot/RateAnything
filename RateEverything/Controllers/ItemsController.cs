@@ -85,7 +85,7 @@ namespace RateEverything.Controllers
                 Item targetItem = _context.Items.First(x => x.ItemId == ID);
 
                 int Sum = 0;
-                int Amount = 1;
+                int Amount = 0;
 
                 foreach (ItemRating Rating in await _context.ItemRatings.Where(x => x.ItemIdRating == targetItem.ItemId).ToListAsync())
                 {

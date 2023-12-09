@@ -12,6 +12,17 @@ function showRatingPopup() {
     }
 }
 
+function displayModal(message, displayTime) {
+    var modal = document.getElementById("modalDialog")
+
+    if (modal != null) {
+        modal.style.display = 'block'
+        setTimeout(function () {
+            modal.style.display = 'none'
+        }, displayTime * 1000)
+    } 
+}
+
 function postRating(itemID) {
     var postData = {
         "rating": parseInt(document.getElementById("rating").value),
@@ -28,8 +39,12 @@ function postRating(itemID) {
         data: postData,
         dataType: "json"
     }).fail(function (data) {
-        console.log("Ajax request failed, returned data: " + data);
+        var messageString = "Ajax request failed, returned data: " + data
+        displayModal(messageString, 3);
+        console.log(messageString);
     }).done(function (data) {
-        console.log("Ajax request success, returned data: " + data);
+        var messageString = "Ajax request success, returned data: " + data
+        displayModal(messageString, 3);
+        console.log(messageString);
     })
 }
