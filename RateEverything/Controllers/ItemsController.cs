@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using RateEverything.Areas.Identity.Data;
 using RateEverything.Data;
 using RateEverything.Models;
 
@@ -15,39 +21,19 @@ namespace RateEverything.Controllers
     public class ItemsController : Controller
     {
         private readonly RateEverythingContext _context;
+        private UserManager<RateEverythingUser> _userManager;
 
-        public ItemsController(RateEverythingContext context)
+        public ItemsController(RateEverythingContext context, UserManager<RateEverythingUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            List<Item> ItemList = await _context.Items.ToListAsync();
-
-            foreach(var Item in ItemList)
-            {
-                int Sum = 0;
-                int Amount = 1;
-
-                foreach(var Rating in await _context.ItemRatings.Where(x => x.Rating == Item.ItemId).ToListAsync())
-                {
-                    Sum += Rating.Rating;
-                    Amount += 1;
-                }
-
-                //No items found so default to 1 to prevent division error
-                if (Amount <= 0)
-                {
-                    Amount = 1;
-                }
-
-                Item.Rating = Sum / Amount;
-            }
-
             return _context.Items != null ? 
-                        View(ItemList) :
+                        View(await _context.Items.ToListAsync()) :
                         Problem("Entity set 'RateEverythingContext.Items'  is null.");
         }
 
@@ -66,7 +52,60 @@ namespace RateEverything.Controllers
                 return NotFound();
             }
 
-            return View(item);
+            List<ItemRating> ratings = await _context.ItemRatings.Where(x => x.ItemIdRating == item.ItemId).ToListAsync();
+            CombinedItem details = new(item, ratings);
+
+            return View(details);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Details(int rating, int ID)
+        {
+            string returnMessage = "No user!";
+
+            if (User != null)
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                returnMessage = "No data!";
+
+                if (!_context.ItemRatings.Where(x => x.UserId == userId).IsNullOrEmpty())
+                {
+                    ItemRating currentRating = _context.ItemRatings.Where(x => x.UserId == userId).First();
+
+                    currentRating.Rating = rating;
+                    _context.ItemRatings.Update(currentRating);
+                    returnMessage = "Created a new rating!";
+                } else
+                {
+                    ItemRating newRating = new(ID, User.FindFirstValue(ClaimTypes.NameIdentifier), rating);
+                    _context.ItemRatings.Add(newRating);
+                    returnMessage = "Updated previous rating!";
+                }
+
+                Item targetItem = _context.Items.First(x => x.ItemId == ID);
+
+                int Sum = 0;
+                int Amount = 1;
+
+                foreach (ItemRating Rating in await _context.ItemRatings.Where(x => x.ItemIdRating == targetItem.ItemId).ToListAsync())
+                {
+                    Sum += Rating.Rating;
+                    Amount += 1;
+                }
+
+                //No items found so default to 1 to prevent division error
+                if (Amount <= 0)
+                {
+                    Amount = 1;
+                }
+
+                targetItem.Rating = Sum / Amount;
+                _context.Items.Update(targetItem);
+
+                await _context.SaveChangesAsync();
+                return Json(returnMessage);
+            }
+            return Json(returnMessage);
         }
 
         // GET: Items/Create

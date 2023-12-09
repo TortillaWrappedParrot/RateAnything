@@ -5,6 +5,9 @@ namespace RateEverything.Models
 {
     public class ItemRating
     {
+        
+
+
         /// <summary>
         /// Internal key of comment ID
         /// </summary>
@@ -19,11 +22,23 @@ namespace RateEverything.Models
         /// <summary>
         /// ID of the user posting the rating
         /// </summary>
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         /// <summary>
         /// Current rating from 1-5, displaye as stars
         /// </summary>
-        public int Rating { get; set; }
+        public int Rating { get; set; } = 0;
+
+        public ItemRating()
+        {
+
+        }
+
+        public ItemRating(int itemID, string userID, int rating)
+        {
+            this.ItemIdRating = itemID;
+            this.UserId = userID;
+            this.Rating = rating;
+        }
     }
 }

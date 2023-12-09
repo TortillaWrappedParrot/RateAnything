@@ -13,16 +13,28 @@ namespace RateEverything.Models
         /// <summary>
         /// Name of the item
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Description for the item
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Current rating from 1-5, displaye as stars
         /// </summary>
         public int Rating { get; set; } = 0;
+
+        public Item()
+        {
+
+        }
+
+        public Item(string name, string description, int rating)
+        {
+            this.Name = name;
+            this.Description = description;
+            this.Rating = rating;
+        }
     }
 }
