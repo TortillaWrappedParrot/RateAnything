@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Identity;
 using RateEverything.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var databaseConnection = builder.Configuration["Database:ConnectionString"];
 
 // Add services to the container.
 builder.Services.AddDbContext<RateEverythingContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(databaseConnection));
 
 builder.Services.AddDefaultIdentity<RateEverythingUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<RateEverythingContext>();
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+builder.Services.AddDatabaseDeveloperPageExceptionFilter(); 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
