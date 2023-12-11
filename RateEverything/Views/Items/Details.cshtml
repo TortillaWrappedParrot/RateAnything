@@ -39,16 +39,14 @@
 <div>
     <button type="button" class="btn btn-primary" data-bs-toggle="button" onclick="showRatingPopup()">Rate this item!</button>
     <div id="RatingPopup" style="display:none">
-        <form id="ratingForm">
-            <label for="rating">Enter a rating from 1-5:</label><br>
-            <input type="text" id="rating" name="rating"><br>
-            <input type="submit" value="Submit" onclick="postRating('@Model.CurrentItem.ItemId')">
-        </form>
+        <label for="rating">Enter a rating from 1-5:</label><br>
+        <input type="text" id="rating" name="rating"><br>
+        <input type="button" value="Submit" onclick="postRating('@Model.CurrentItem.ItemId')">
     </div>
 </div>
 <br />
 <div>
     <a class="btn btn-sm btn-secondary" asp-area="" asp-controller="ItemComments" asp-action="Index" asp-route-id="@Model.CurrentItem.ItemId">Comments</a> |
     <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-route-id="@Model.CurrentItem.ItemId">Edit</a> |
-    <a class="btn btn-sm btn-secondary" asp-action="Index">Back to List</a>
+    <a class="btn btn-sm btn-secondaryI" asp-action="Index">Back to List</a>
 </div>
