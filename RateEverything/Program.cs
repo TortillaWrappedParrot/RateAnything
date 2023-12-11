@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using RateEverything.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var databaseConnection = builder.Configuration["Database:ConnectionString"];
+var databaseConnection = builder.Configuration["Database:DefaultConnection"];
 
 // Add services to the container.
 builder.Services.AddDbContext<RateEverythingContext>(options =>
@@ -36,6 +36,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseWebSockets();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
